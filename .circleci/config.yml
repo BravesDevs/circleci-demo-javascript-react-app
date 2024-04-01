@@ -9,7 +9,7 @@ jobs:
       TEST_DATABASE_URL: postgres://root@localhost/mydb
     steps:
       - checkout
-      - run: sudo apt install postgresql-client
+      - run: sudo apt update && sudo apt install -y postgresql-client
       - run: whoami
       - run: |
           psql -d $TEST_DATABASE_URL -c "CREATE TABLE test (name char(25));"
