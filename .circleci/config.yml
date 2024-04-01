@@ -1,22 +1,51 @@
-version: 2.1
-
+verion: 2.1
 jobs:
-  test:
+  build:
     docker:
-      - image: cimg/node:17.2.0
+      -image: circleci/python
+      environment:
+        - TEST_DATABASE_URL: postgres://root@localhost/mydb
+      -image: circleci/postgres:9.6-alpine-ram
+
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: npm install --legacy-peer-deps
-      - run:
-          name: Run Tests
-          command: npm test
-      
-workflows:
-  test-build:
-    jobs:
-      - test
+      - run: sudo apt install postgresql-client
+      - run: whoami
+      - run: |
+          psql \ 
+          -d $TEST_DATABASE_URL \
+          -c "CREATE TABLE test (name char(25));"
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "INSERT INTO test VALUES ('hello');"
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "SELECT * FROM test;"
+# CIRCLE CI HELLO WORLD CONFIGURATION FILE
+
+# version: 2.1
+
+# jobs:
+#   test:
+#     docker:
+#       - image: cimg/node:17.2.0
+#     steps:
+#       - checkout
+#       - run:
+#           name: Install Dependencies
+#           command: npm install --legacy-peer-deps
+#       - run:
+#           name: Run Tests
+#           command: npm test
+
+# workflows:
+#   test-build:
+#     jobs:
+#       - test
+
+# CIRCLE CI DEFAULT CONFIG FILE
 # version: 2.1
 # orbs:
 #   node: circleci/node@4.7.0
