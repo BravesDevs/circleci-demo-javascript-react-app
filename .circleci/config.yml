@@ -6,14 +6,16 @@ jobs:
       - image: circleci/python:3.7.4
       - image: circleci/postgres:9.6-alpine-ram
     environment:
-      TEST_DATABASE_URL: postgres://postgres@localhost/mydb
+      TEST_DATABASE_URL: postgres://postgres@localhost/
     steps:
       - checkout
-      - run: sudo apt update && sudo apt install -y postgresql-client
+      - run: sudo apt install postgresql-client
       - run: whoami
       - run: |
-          psql -d $TEST_DATABASE_URL -c "CREATE TABLE test (name char(25));"
+          psql -U postgres -c "CREATE DATABASE mydb;"
       - run: |
-          psql -d $TEST_DATABASE_URL -c "INSERT INTO test VALUES ('hello');"
+          psql -U postgres -d mydb -c "CREATE TABLE test (name char(25));"
       - run: |
-          psql -d $TEST_DATABASE_URL -c "SELECT * FROM test;"
+          psql -U postgres -d mydb -c "INSERT INTO test VALUES ('hello');"
+      - run: |
+          psql -U postgres -d mydb -c "SELECT * FROM test;"
