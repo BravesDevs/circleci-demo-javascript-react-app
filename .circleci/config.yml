@@ -6,8 +6,10 @@ jobs:
       - image: cimg/node:17.2.0
     steps:
       - checkout
-      - run: npm install 
-
+      - run: npm install --legacy-peer-deps
+      - run: node --version
+      - run: npm --version
+      - run: npm run start
 workflows:
   test-build:
     jobs:
