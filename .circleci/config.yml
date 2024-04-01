@@ -5,10 +5,6 @@ jobs:
     docker:
       - image: circleci/python:3.7.4
       - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: mydb
-          POSTGRES_PASSWORD: postgres
     steps:
       - checkout
       - run: sudo apt update && sudo apt install postgresql-client
